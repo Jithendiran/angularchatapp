@@ -10,16 +10,21 @@ import { ChatService } from 'src/service/chat.service';
 })
 export class LoginComponent implements OnInit {
   constructor(
-    // private readonly chatservice: ChatService,
-    private readonly socketService: SocketService
+    private readonly chatservice: ChatService,
   ) {}
-
-  msg:BehaviorSubject<any> = new BehaviorSubject(0)
   entered(name: string) {
-    this.socketService.createUser(name).subscribe(data=>{
-      console.log("In login : ",data);
-    })
+    this.chatservice.createuser.next(name)
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+   
+   this.chatservice.acks.subscribe(data =>{
+     console.log("Got notofication : ",data);
+     
+   })
+   this.chatservice.getError.subscribe(data =>{
+     console.log("Got Error : ",data);
+   })
+
+  }
 }

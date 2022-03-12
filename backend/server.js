@@ -5,7 +5,7 @@ const http = require('http');
 const { randomUUID } = require('crypto');
 
 
-app.use(express.static('./'))
+//app.use(express.static('./'))
 
 const server = http.createServer(app);
 let io = require('socket.io')(server, {
@@ -46,18 +46,18 @@ io.on('connection', (socket) => {
         else {
             return socket.emit("error", "Empty not allowed")
         }
-        return socket.emit("userCreated",data)
+        return socket.emit("ack",{ack:"User Created",data})
     })
 
     socket.on('createRoom', () => {
         const id = randomUUID()
         room[id] = [(socket.id)]
-        socket.emit("roomCreated", id)
+        socket.emit("ack", {ack:"Room created ",data:id})
     })
 
     socket.on('joinroom', (data) => {
         room[data].push(socket.id)
-        socket.emit("joinedroom", socket.id)
+        socket.emit("ack",{ack:"joinedroom" ,data: socket.id})
         console.log("rooom : ", room);
 
     })
